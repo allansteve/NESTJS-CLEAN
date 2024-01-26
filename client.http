@@ -28,3 +28,15 @@ Content-Type: application/json
 POST {{baseUrl}}/questions
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
+
+{
+	"title": "Qual lingua de programação devo aprender?",
+	"content": "Estou iniciando na programação e gostaria de saber qual linguagem de programação devo aprender primeiro?"
+}
+
+###
+
+# @name fetch_recetn_questions
+GET {{baseUrl}}/questions?page=2
+Content-Type: application/json
+Authorization: Bearer {{authToken}}

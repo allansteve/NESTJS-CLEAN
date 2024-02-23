@@ -1,9 +1,10 @@
-import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { QuestionsRepository } from '../repositories/questions-repository'
-import { QuestionComment } from '../../enterprise/entities/question-comment'
-import { QuestionsCommentsRepository } from '../repositories/question-comments-repository'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { QuestionComment } from '@/domain/forum/enterprise/entities/question-comment'
+import { QuestionCommentsRepository } from '@/domain/forum/application/repositories/question-comments-repository'
 import { Either, left, right } from '@/core/either'
-import { ResourceNotFoundError } from '../../../../core/errors/errors/resource-not-found-error'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
 interface CommentOnQuestionUseCaseRequest {
   authorId: string
@@ -18,10 +19,11 @@ type CommentOnQuestionUseCaseResponse = Either<
   }
 >
 
+@Injectable()
 export class CommentOnQuestionUseCase {
   constructor(
     private questionsRepository: QuestionsRepository,
-    private questionCommentRepository: QuestionsCommentsRepository,
+    private questionCommentsRepository: QuestionCommentsRepository,
   ) {}
 
   async execute({
@@ -41,8 +43,10 @@ export class CommentOnQuestionUseCase {
       content,
     })
 
-    await this.questionCommentRepository.create(questionComment)
+    await this.questionCommentsRepository.create(questionComment)
 
-    return right({ questionComment })
+    return right({
+      questionComment,
+    })
   }
 }

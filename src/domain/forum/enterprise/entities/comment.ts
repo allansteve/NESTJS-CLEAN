@@ -1,15 +1,15 @@
 import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
-export interface CommentsProps {
+export interface CommentProps {
   authorId: UniqueEntityID
   content: string
   createdAt: Date
-  updatedAt?: Date
+  updatedAt?: Date | null
 }
 
 export abstract class Comment<
-  Props extends CommentsProps,
+  Props extends CommentProps,
 > extends Entity<Props> {
   get authorId() {
     return this.props.authorId

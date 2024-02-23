@@ -1,22 +1,22 @@
-import { Either, left, right } from './either'
+import { Either, left, right } from '@/core/either'
 
-function doSomething(shouldSuccess: boolean): Either<string, string> {
+function doSomeThing(shouldSuccess: boolean): Either<string, number> {
   if (shouldSuccess) {
-    return right('success')
+    return right(10)
   } else {
     return left('error')
   }
 }
 
-it('success result', () => {
-  const result = doSomething(true)
+test('success result', () => {
+  const result = doSomeThing(true)
 
   expect(result.isRight()).toBe(true)
   expect(result.isLeft()).toBe(false)
 })
 
-it('success result', () => {
-  const result = doSomething(false)
+test('error result', () => {
+  const result = doSomeThing(false)
 
   expect(result.isLeft()).toBe(true)
   expect(result.isRight()).toBe(false)

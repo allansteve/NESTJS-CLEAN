@@ -1,9 +1,10 @@
-import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { AnswersRepository } from '../repositories/answers-repository'
-import { AnswerComment } from '../../enterprise/entities/answer-comment'
-import { AnswerCommentsRepository } from '../repositories/answer-comments-repository'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { AnswerComment } from '@/domain/forum/enterprise/entities/answer-comment'
+import { AnswerCommentsRepository } from '@/domain/forum/application/repositories/answer-comments-repository'
 import { Either, left, right } from '@/core/either'
-import { ResourceNotFoundError } from '../../../../core/errors/errors/resource-not-found-error'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
 interface CommentOnAnswerUseCaseRequest {
   authorId: string
@@ -18,10 +19,11 @@ type CommentOnAnswerUseCaseResponse = Either<
   }
 >
 
+@Injectable()
 export class CommentOnAnswerUseCase {
   constructor(
-    private answerRepository: AnswersRepository,
-    private answerCommentRepository: AnswerCommentsRepository,
+    private answersRepository: AnswersRepository,
+    private answerCommentsRepository: AnswerCommentsRepository,
   ) {}
 
   async execute({
@@ -29,7 +31,7 @@ export class CommentOnAnswerUseCase {
     answerId,
     content,
   }: CommentOnAnswerUseCaseRequest): Promise<CommentOnAnswerUseCaseResponse> {
-    const answer = await this.answerRepository.findById(answerId)
+    const answer = await this.answersRepository.findById(answerId)
 
     if (!answer) {
       return left(new ResourceNotFoundError())
@@ -41,8 +43,10 @@ export class CommentOnAnswerUseCase {
       content,
     })
 
-    await this.answerCommentRepository.create(answerComment)
+    await this.answerCommentsRepository.create(answerComment)
 
-    return right({ answerComment })
+    return right({
+      answerComment,
+    })
   }
 }
